@@ -1,4 +1,4 @@
-`set(DASYNQ_INCLUDE_DIRS 'include_dir`)
+`set(DASYNQ_INCLUDE_DIRS 'ifelse(include_dir_issys,TRUE,,include_dir)`)
 set(DASYNQ_LINK_LIBS 'link_libs`)
 
 add_library(Dasynq::Dasynq INTERFACE IMPORTED)

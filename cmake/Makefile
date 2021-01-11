@@ -11,7 +11,8 @@ clean:
 # Note we capture "CXXLINKOPTS" via the shell variable, not the make variable! this is so we don't lose
 # shell escape & quoting characters (which, handily, also work for cmake).
 Dasynq.cmake: Dasynq.cmake.m4
-	m4 -D include_dir=$(HEADERDIR) -D link_libs="$$CXXLINKOPTS" Dasynq.cmake.m4 > Dasynq.cmake
+	m4 -D include_dir=$(HEADERDIR) -Dinclude_dir_issys=$(HEADERDIR_ISSYS) \
+	   -D link_libs="$$CXXLINKOPTS" Dasynq.cmake.m4 > Dasynq.cmake
 
 DasynqConfigVersion.cmake: DasynqConfigVersion.cmake.m4
 	m4 -D dasynq_version=$(VERSION) -D dasynq_major=$(VERSION_MAJOR) DasynqConfigVersion.cmake.m4 > DasynqConfigVersion.cmake
