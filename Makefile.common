@@ -1,13 +1,24 @@
 # Installation:
-#DESTDIR=  (acts as prefix to other paths for installation)
+# Note that following variables need to be escaped/quoted for shell.
+
+# Acts as prefix to other paths for installation
+#DESTDIR=  
+
+# where to install headers, and whether headerdir is on system include path:
 HEADERDIR=/usr/include
+HEADERDIR_ISSYS=TRUE
+
+# where to install "lib" stuff eg pkgconfig file goes under $LIBDIR/pkgconfig
 LIBDIR=/usr/lib
 
+# Version, and major part of version separated out
 VERSION=1.2.0
 VERSION_MAJOR=1
 
+
 export CXX CXXOPTS CXXLINKOPTS CXXTESTOPTS CXXTESTLINKOPTS THREADOPT SANITIZE
-export HEADERDIR LIBDIR DESTDIR VERSION VERSION_MAJOR
+export HEADERDIR HEADERDIR_ISSYS LIBDIR DESTDIR VERSION VERSION_MAJOR
+
 
 all:
 	$(MAKE) -C cmake all
@@ -23,21 +34,13 @@ check:
 
 # pkg-config file:
 dasynq.pc:
-	@echo "Writing dasynq.pc file."
-	@rm -f dasynq.pc
-	@echo "# Dasynq - event loop library" >> dasynq.pc
-	@echo "Name: Dasynq" >> dasynq.pc
-	@echo "Description: Thread-safe cross-platform event loop library in C++" >> dasynq.pc
-	@echo "Version: $(VERSION)" >> dasynq.pc
-	@echo "URL: http://github.com/davmac314/dasynq" >> dasynq.pc
-	@echo "Libs: $(CXXLINKOPTS)" >> dasynq.pc
-	@echo "Cflags: $(CXXOPTS) -I\"$(HEADERDIR)\"" >> dasynq.pc
+	@sh buildtools/write-pc-file.sh
 
 install: dasynq.pc
-	install -d "$(DESTDIR)$(HEADERDIR)/dasynq" "$(DESTDIR)$(LIBDIR)/pkgconfig"
-	install -m644 include/dasynq/* "$(DESTDIR)$(HEADERDIR)/dasynq"
-	install -m644 include/dasynq.h "$(DESTDIR)$(HEADERDIR)"
-	install -m644 dasynq.pc "$(DESTDIR)$(LIBDIR)/pkgconfig"
+	install -d $(DESTDIR)$(HEADERDIR)/dasynq $(DESTDIR)$(LIBDIR)/pkgconfig
+	install -m644 include/dasynq/* $(DESTDIR)$(HEADERDIR)/dasynq
+	install -m644 include/dasynq.h $(DESTDIR)$(HEADERDIR)
+	install -m644 dasynq.pc $(DESTDIR)$(LIBDIR)/pkgconfig
 	$(MAKE) -C cmake install
 
 clean:
